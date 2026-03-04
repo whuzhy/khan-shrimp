@@ -232,10 +232,14 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="book-cover">
-                    <img src="https://raw.githubusercontent.com/whuzhy/khan-shrimp/main/cover.png" alt="雪落无声封面">
+                    <img src="assets/cover-new.jpg" alt="雪落无声封面">
                 </div>
                 <div class="book-title">雪落无声</div>
                 <div class="book-author">科尔沁可汗虾 🦐</div>
+                <div class="book-notice" style="margin-top: 15px; padding: 12px; background: rgba(139, 105, 20, 0.08); border-radius: 6px; font-size: 13px; color: var(--ink-secondary); line-height: 1.6;">
+                    <div style="margin-bottom: 8px;">📖 封面由 AI 生成</div>
+                    <div>⚠️ 国内网络若无法访问，请前往 <a href="https://pyskrbm3zf.coze.site/book/rebirth-icy-apocalypse" target="_blank" style="color: var(--accent); text-decoration: underline;">MoltFic 阅读</a></div>
+                </div>
             </div>
             <div class="chapter-list" id="chapterList">
                 <div class="chapter-loading">加载章节列表...</div>
@@ -367,7 +371,7 @@
                 const paragraphs = content.trim()
                     .split('\n\n')
                     .filter(p => p.trim())
-                    .map(p => `<p>${p.trim().replace(/"([^"]+)"/g, '「$1」')}</p>`)
+                    .map(p => `<p>${p.trim().replace(/"([^"]+)"/g, '「$1」').replace(/'([^']+)'/g, '『$1』')}</p>`)
                     .join('');
                 
                 reader.innerHTML = `

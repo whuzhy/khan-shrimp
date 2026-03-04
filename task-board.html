@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>章鱼的待办清单</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0eeeb;
+            min-height: 100vh;
+            color: #2c2c2c;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        
+        /* 复古纸张纹理 */
+        .paper {
+            background: #fefefe;
+            border-radius: 4px;
+            box-shadow: 
+                0 1px 1px rgba(0,0,0,0.08),
+                0 2px 2px rgba(0,0,0,0.06),
+                0 4px 4px rgba(0,0,0,0.04),
+                0 8px 8px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 28px,
+                    rgba(200, 190, 180, 0.15) 28px,
+                    rgba(200, 190, 180, 0.15) 29px
+                );
+            pointer-events: none;
+            border-radius: 4px;
+        }
+        
+        /* 头部 */
+        .header {
+            padding: 32px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+        }
+        
+        .date {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* 统计 - 极简数字 */
+        .stats {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 1;
+            color: #1a1a1a;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 添加按钮 */
+        .add-section {
+            padding: 24px 32px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .add-btn:hover {
+            border-color: #999;
+            color: #333;
+            background: rgba(0,0,0,0.02);
+        }
+        
+        /* 任务列表 */
+        .task-list {
+            padding: 8px 0;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 32px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .task-item:hover {
+            background: rgba(0,0,0,0.015);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* 复选框 - 复古风格 */
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #c0b8b0;
+            border-radius: 3px;
+            margin-right: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            background: #fafafa;
+        }
+        
+        .checkbox:hover {
+            border-color: #999;
+        }
+        
+        .checkbox.checked {
+            background: #2c2c2c;
+            border-color: #2c2c2c;
+        }
+        
+        .checkbox.checked::after {
+            content: '';
+            width: 8px;
+            height: 4px;
+            border-left: 2px solid #fff;
+            border-bottom: 2px solid #fff;
+            transform: rotate(-45deg) translate(1px, -1px);
+        }
+        
+        /* 任务内容 */
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #1a1a1a;
+            letter-spacing: -0.2px;
+        }
+        
+        .task-title.completed {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .task-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        /* 标签 - 复古色 */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 2px;
+        }
+        
+        .tag-xiaoshuo { 
+            background: #e8d5d5; 
+            color: #8b4444; 
+        }
+        .tag-skill { 
+            background: #d5e0e8; 
+            color: #446688; 
+        }
+        .tag-daily { 
+            background: #d5e8d5; 
+            color: #448844; 
+        }
+        .tag-important { 
+            background: #e8e0d5; 
+            color: #886644; 
+        }
+        
+        /* 删除按钮 - 极简 */
+        .delete-btn {
+            padding: 8px;
+            background: transparent;
+            border: none;
+            color: #ccc;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+        
+        .delete-btn:hover {
+            color: #ff4444;
+        }
+        
+        .task-item:hover .delete-btn {
+            opacity: 1;
+        }
+        
+        /* 空状态 */
+        .empty {
+            text-align: center;
+            padding: 80px 40px;
+            color: #aaa;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 15px;
+        }
+        
+        /* 弹窗 - 复古纸张风格 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(240, 238, 235, 0.9);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #fefefe;
+            border-radius: 4px;
+            padding: 32px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 
+                0 4px 6px rgba(0,0,0,0.05),
+                0 10px 20px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 28px,
+                rgba(200, 190, 180, 0.1) 28px,
+                rgba(200, 190, 180, 0.1) 29px
+            );
+            pointer-events: none;
+            border-radius: 4px;
+        }
+        
+        .modal h2 {
+            font-size: 20px;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .modal input,
+        .modal select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 15px;
+            margin-bottom: 16px;
+            font-family: inherit;
+            background: #fafafa;
+        }
+        
+        .modal input:focus,
+        .modal select:focus {
+            outline: none;
+            border-color: #999;
+            background: #fff;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .modal-btn.cancel:hover {
+            background: #eee;
+        }
+        
+        .modal-btn.save {
+            background: #2c2c2c;
+            color: #fff;
+        }
+        
+        .modal-btn.save:hover {
+            background: #1a1a1a;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .stats {
+                gap: 24px;
+            }
+            
+            .stat-value {
+                font-size: 28px;
+            }
+            
+            .header, .add-section, .task-item {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="paper">
+            <div class="header">
+                <div class="header-top">
+                    <h1>待办清单</h1>
+                    <div class="date" id="current-date"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">全部</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="stat-todo">0</div>
+                        <div class="stat-label">待办</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="stat-progress">0</div>
+                        <div class="stat-label">进行中</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="stat-done">0</div>
+                        <div class="stat-label">已完成</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="add-section">
+                <button class="add-btn" onclick="openModal()">+ 添加新任务</button>
+            </div>
+            
+            <div class="task-list" id="task-list"></div>
+            
+            <div class="empty" id="empty" style="display: none;">
+                <div class="empty-icon">📝</div>
+                <div class="empty-text">没有任务，点击上方添加</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2>新任务</h2>
+            <input type="text" id="input-title" placeholder="任务名称">
+            <select id="input-category">
+                <option value="xiaoshuo">小说</option>
+                <option value="skill">技能</option>
+                <option value="daily">日常</option>
+                <option value="important">重要</option>
+            </select>
+            <select id="input-status">
+                <option value="todo">待办</option>
+                <option value="progress">进行中</option>
+                <option value="done">已完成</option>
+            </select>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">取消</button>
+                <button class="modal-btn save" onclick="saveTask()">保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let tasks = [
+            { id: 1, title: "写第七章", category: "xiaoshuo", status: "todo", date: "今天" },
+            { id: 2, title: "实例街巡逻", category: "daily", status: "progress", date: "今天" },
+            { id: 3, title: "发布技能帖子", category: "skill", status: "done", date: "昨天" }
+        ];
+        
+        const categoryNames = {
+            xiaoshuo: '小说',
+            skill: '技能',
+            daily: '日常',
+            important: '重要'
+        };
+        
+        const statusOrder = { todo: 0, progress: 1, done: 2 };
+        
+        function updateDate() {
+            const date = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
+            document.getElementById('current-date').textContent = date.toLocaleDateString('zh-CN', options);
+        }
+        
+        function updateStats() {
+            document.getElementById('stat-total').textContent = tasks.length;
+            document.getElementById('stat-todo').textContent = tasks.filter(t => t.status === 'todo').length;
+            document.getElementById('stat-progress').textContent = tasks.filter(t => t.status === 'progress').length;
+            document.getElementById('stat-done').textContent = tasks.filter(t => t.status === 'done').length;
+        }
+        
+        function renderTasks() {
+            const list = document.getElementById('task-list');
+            const empty = document.getElementById('empty');
+            
+            if (tasks.length === 0) {
+                list.style.display = 'none';
+                empty.style.display = 'block';
+                return;
+            }
+            
+            list.style.display = 'block';
+            empty.style.display = 'none';
+            
+            const sorted = [...tasks].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+            
+            list.innerHTML = sorted.map(task => `
+                <div class="task-item">
+                    <div class="checkbox ${task.status === 'done' ? 'checked' : ''}" onclick="toggleTask(${task.id})"></div>
+                    <div class="task-content">
+                        <div class="task-title ${task.status === 'done' ? 'completed' : ''}">${escapeHtml(task.title)}</div>
+                        <div class="task-meta">
+                            <span>${task.date}</span>
+                            <span>·</span>
+                            <span class="tag tag-${task.category}">${categoryNames[task.category]}</span>
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">×</button>
+                </div>
+            `).join('');
+            
+            updateStats();
+        }
+        
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                const flow = { todo: 'progress', progress: 'done', done: 'todo' };
+                task.status = flow[task.status];
+                renderTasks();
+            }
+        }
+        
+        function deleteTask(id) {
+            if (confirm('确定删除？')) {
+                tasks = tasks.filter(t => t.id !== id);
+                renderTasks();
+            }
+        }
+        
+        function openModal() {
+            document.getElementById('input-title').value = '';
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function saveTask() {
+            const title = document.getElementById('input-title').value.trim();
+            const category = document.getElementById('input-category').value;
+            const status = document.getElementById('input-status').value;
+            
+            if (!title) return;
+            
+            tasks.push({
+                id: Date.now(),
+                title,
+                category,
+                status,
+                date: '今天'
+            });
+            
+            closeModal();
+            renderTasks();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        document.getElementById('input-title').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') saveTask();
+        });
+        
+        updateDate();
+        renderTasks();
+    </script>
+</body>
+</html>
