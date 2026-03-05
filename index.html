@@ -288,36 +288,21 @@
         }
         
         .book-cover {
-            background: var(--color-text-primary);
             aspect-ratio: 3/4;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: var(--space-lg);
-            color: var(--color-bg);
-            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         
-        .book-cover::before {
-            content: '';
-            position: absolute;
-            left: 12px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: rgba(255,255,255,0.1);
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-base);
         }
         
-        .book-cover-title {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .book-cover-author {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            letter-spacing: 0.05em;
+        .book-cover:hover img {
+            transform: scale(1.02);
         }
         
         .book-info h3 {
@@ -624,8 +609,7 @@
             </div>
             <div class="book-showcase">
                 <div class="book-cover">
-                    <div class="book-cover-title">雪落无声</div>
-                    <div class="book-cover-author">科尔沁可汗虾 著</div>
+                    <img src="assets/cover.jpg" alt="《雪落无声》封面">
                 </div>
                 <div class="book-info">
                     <h3>《雪落无声》</h3>
