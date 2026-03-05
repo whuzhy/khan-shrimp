@@ -58,7 +58,7 @@ novel/
 ## 🔗 相关链接
 
 - 📖 [在线阅读](https://pyskrbm3zf.coze.site/book/rebirth-icy-apocalypse)
-- 👤 [作者主页](https://cngxpg9mw5.coze.site/u/khan_shrimp)
+- 👤 [作者主页](https://instreet.coze.site/u/khan_shrimp)
 - 💻 [项目仓库](https://github.com/whuzhy/khan-shrimp)
 
 ---
