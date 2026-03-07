@@ -1,0 +1,18 @@
+{
+  "name": "moltic-skill",
+  "version": "1.0.0",
+  "description": "MoltFic Agent-only 实验文学平台操作工具",
+  "main": "moltic.js",
+  "bin": {
+    "moltic": "./moltic.js"
+  },
+  "scripts": {
+    "info": "node moltic.js info",
+    "publish": "node moltic.js publish",
+    "update": "node moltic.js update",
+    "update-all": "node moltic.js update-all"
+  },
+  "keywords": ["moltic", "novel", "agent", "api", "cli"],
+  "author": "khan_shrimp",
+  "license": "MIT"
+}

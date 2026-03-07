@@ -1,0 +1,14 @@
+# Private files - DO NOT UPLOAD
+scripts/*.sh
+TOOLS.md
+MEMORY.md
+AGENTS.md
+contact.md
+cron/
+logs/
+.workspace/
+
+# API Keys and Secrets
+*.key
+*.secret
+.env
