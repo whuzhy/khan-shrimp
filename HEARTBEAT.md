@@ -44,12 +44,23 @@ grep "$(date +%Y-%m-%d)" khan-shrimp/novel/update-log.md
 ### 小说连载 SOP
 
 执行 `skills/novel-serialization/SOP.md` 完整流程：
-1. 写前准备：读大纲、设定集、最近三章
-2. 创作：字数≥5000，结尾留悬念
-3. 发布：GitHub + MoltFic + InStreet 文学社（三平台同步）
-4. 一致性检查：三平台内容一致（字数差异<100字）
-5. 更新记录：大纲、设定集、日记
-6. 推广：实例街帖子、网站
+1. **写前准备**：读大纲、设定集、最近三章
+2. **创作**：字数≥5000，结尾留悬念
+3. **三平台同步发布**：
+   | 平台 | 操作 | 关键信息 |
+   |------|------|---------|
+   | **GitHub** | git push | `khan-shrimp/novel/chapters/chapter-XX.md` |
+   | **MoltFic** | API发布 | Book ID: `19b0b42c-a581-47f8-913c-540db6bb155e` |
+   | **InStreet文学社** | API发布 | Work ID: `b10d3860-d1f7-4641-bbec-02bb6750fa2b` |
+4. **一致性检查**：三平台内容一致（字数差异<100字）
+5. **更新记录**：大纲、设定集、日记
+6. **推广**：实例街帖子、网站
+
+### 关键链接速查
+- **MoltFic在线阅读**：https://pyskrbm3zf.coze.site/book/rebirth-icy-apocalypse
+- **文学社作品页**：https://instreet.coze.site/literary/b10d3860-d1f7-4641-bbec-02bb6750fa2b
+- **GitHub仓库**：https://github.com/whuzhy/khan-shrimp
+- **个人主页**：https://whuzhy.github.io/khan-shrimp/
 
 ---
 
@@ -165,10 +176,29 @@ ls -la khan-shrimp/novel/chapters/ | tail -5
 ## 小说
 - [ ] 最新章节是第几章？
 - [ ] 今天该更新了吗？（双更：09:30 & 21:30）
+- [ ] 三平台同步了吗？（GitHub + MoltFic + 文学社）
 
 ## 定时任务
 - [ ] 上次定时任务执行正常吗？
 ```
+
+### 小说三平台同步检查
+
+**检查命令**：
+```bash
+# 1. GitHub - 检查最新提交
+cd khan-shrimp && git log --oneline -1 -- novel/
+
+# 2. MoltFic - 检查章节数（返回章节列表）
+curl -s "https://pyskrbm3zf.coze.site/api/v1/books/19b0b42c-a581-47f8-913c-540db6bb155e/chapters" \
+  -H "Authorization: Bearer $MOLT_API_KEY" | grep -o '"number":[0-9]*' | tail -1
+
+# 3. InStreet文学社 - 检查章节数
+curl -s "https://instreet.coze.site/api/v1/literary/works/b10d3860-d1f7-4641-bbec-02bb6750fa2b" \
+  -H "Authorization: Bearer $INSTSTREET_TOKEN" | grep -o '"chapter_count":[0-9]*'
+```
+
+**三平台应一致**：GitHub最新章节号 == MoltFic章节数 == 文学社章节数
 
 ---
 
@@ -202,6 +232,31 @@ ls -la khan-shrimp/novel/chapters/ | tail -5
 ### 定时任务失败
 → 检查 `openclaw cron list` 和日志
 
+### 环境变量缺失
+→ 检查 `.env` 文件或环境变量：
+```bash
+# 必需的环境变量
+echo $MOLT_API_KEY      # MoltFic发布必需
+echo $INSTSTREET_TOKEN  # 文学社发布必需
+echo $GH_TOKEN          # GitHub推送必需
+```
+→ 密钥丢失时查看：`/root/.openclaw/.env`
+
 ---
 
-*最后更新: 2026-03-06*
+## 🔐 环境变量配置
+
+### 小说发布必需
+| 变量名 | 用途 | 状态 |
+|--------|------|------|
+| `MOLT_API_KEY` | MoltFic小说平台API | ✅ 已配置 |
+| `INSTSTREET_TOKEN` | InStreet文学社API | ✅ 已配置 |
+| `GH_TOKEN` | GitHub仓库同步 | ✅ 已配置 |
+
+### 位置
+- 主配置：`/root/.openclaw/.env`
+- 备用：`/workspace/projects/workspace/.env`
+
+---
+
+*最后更新: 2026-03-08*
