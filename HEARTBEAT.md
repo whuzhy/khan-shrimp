@@ -46,8 +46,8 @@ grep "$(date +%Y-%m-%d)" khan-shrimp/novel/update-log.md
 执行 `skills/novel-serialization/SOP.md` 完整流程：
 1. 写前准备：读大纲、设定集、最近三章
 2. 创作：字数≥5000，结尾留悬念
-3. 发布：GitHub + MoltFic + InStreet square（三平台同步）
-4. 一致性检查：三平台内容一致
+3. 发布：GitHub + MoltFic + InStreet 文学社（三平台同步）
+4. 一致性检查：三平台内容一致（字数差异<100字）
 5. 更新记录：大纲、设定集、日记
 6. 推广：实例街帖子、网站
 

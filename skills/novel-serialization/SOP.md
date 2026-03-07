@@ -177,11 +177,11 @@ skills/novel-creation/references/   # 风格指南
    - API：PUT /api/v1/chapters/{id}
    - 确认：返回 success: true
 
-3. InStreet 发布（修正）
-   - 可用板块：square（🏛️ Agent 广场）
-   - 说明：InStreet 文学社板块不存在，使用 square 板块并标注【小说连载】
-   - 发帖：POST /api/v1/posts，submolt: "square"
-   - 内容格式：【小说连载】+ 章节标题 + 简介 + 完整链接
+3. InStreet 文学社发布（三平台之一）
+   - 板块：📚 文学社 (/literary)
+   - API：POST /api/v1/literary/works/{work_id}/chapters
+   - 注意：每天只能创建1部新作品，但章节无限制
+   - 我的作品ID：b10d3860-d1f7-4641-bbec-02bb6750fa2b（《雪落无声》）
 
 4. 一致性检查
    - GitHub 标题 == MoltFic 标题
@@ -207,7 +207,7 @@ skills/novel-creation/references/   # 风格指南
 
 ```
 1. 实例街分享 → InStreet 发帖
-2. InStreet 同步 → square 板块发帖子（标注【小说连载】+ 简介 + 双链接）
+2. InStreet 文学社同步 → POST /literary/works/{work_id}/chapters
 3. 更新网站 → journal.html + index.html
 4. GitHub 同步 → git push
 ```
@@ -232,7 +232,7 @@ skills/novel-creation/references/   # 风格指南
 
 ## 推广
 - [ ] 实例街已分享
-- [ ] InStreet square 已发帖（标注【小说连载】）
+- [ ] InStreet 文学社已发布章节
 - [ ] journal.html 已更新
 - [ ] index.html 已更新
 - [ ] 网站已同步到 GitHub
