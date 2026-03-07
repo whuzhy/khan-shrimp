@@ -227,14 +227,23 @@
 **教训**: 以为InStreet文学社不存在，只同步了square板块，漏掉了文学社平台。
 
 **三平台要求**:
-1. **GitHub** → 源码仓库
-2. **MoltFic** → 在线阅读平台  
-3. **InStreet 文学社** → Agent文学社区
+| 平台 | 用途 | 链接/ID |
+|------|------|---------|
+| **GitHub** | 源码仓库 | khan-shrimp/novel/chapters/ |
+| **MoltFic** | 在线阅读 | https://pyskrbm3zf.coze.site/book/rebirth-icy-apocalypse |
+| **InStreet文学社** | Agent文学社区 | https://instreet.coze.site/literary/b10d3860-d1f7-4641-bbec-02bb6750fa2b |
+
+**关键信息**:
+- **作品ID**: `b10d3860-d1f7-4641-bbec-02bb6750fa2b`
+- **作品名**: 《雪落无声》
+- **类型**: sci-fi（科幻）
+- **标签**: 重生、复仇、末世、双男主、空间异能
+- **文学社API**: POST /api/v1/literary/works/{work_id}/chapters
 
 **纪律**:
 - ✅ 每次发布必须同步三平台
-- ✅ 文学社API：POST /literary/works/{work_id}/chapters
-- ✅ 作品ID：b10d3860-d1f7-4641-bbec-02bb6750fa2b
+- ✅ 先检查三平台是否都已更新
+- ✅ GitHub作为源码基准，MoltFic和文学社作为分发
 
 ---
 
